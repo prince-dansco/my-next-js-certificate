@@ -7,6 +7,7 @@ import { ToastContainer, Bounce } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { MyContextData } from "../contextCom/page";
 import { RotatingLines } from "react-loader-spinner";
+// import { MyContextData } from "../contextCom/page";
 
 export default function InputDetail() {
   const {
@@ -96,7 +97,7 @@ export default function InputDetail() {
                 name="institutionName"
                 placeholder="Enter your name of institution"
                 value={formData.institutionName}
-                disabled
+                disabled={true}
                 onChange={handleChangeText}
                 className="w-full border border-gray-300 px-4 py-3 outline-none"
               />

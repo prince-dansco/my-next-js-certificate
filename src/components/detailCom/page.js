@@ -204,13 +204,15 @@ export default function PreviewUiForDownload() {
             {/* {formData.programStatement} */}
           </p>
           {/* signatures */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-[72px] mt-6 items-center justify-items-center px-[40px]">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 items-center justify-items-center px-4">
+            {/* <div className="grid grid-cols-1 md:grid-cols-3 gap-[72px] mt-6 items-center justify-items-center px-[40px]"> */}
             {formData.ceoSignature && (
               <div className="text-center">
                 <img
                   src={formData.ceoSignature}
                   alt="CEO Signature"
-                  className="w-[105px] h-full object-cover border-b-4 border-[#64696A] p-1"
+                  className=" w-full max-w-[105px] h-auto object-contain border-b-4 border-[#64696A] pt-1"
+                  // className="w-[105px] h-full object-cover border-b-4 border-[#64696A] p-1"
                 />
                 <p
                   className={`font-medium text-[14px] ${
@@ -233,15 +235,23 @@ export default function PreviewUiForDownload() {
                 <img
                   src={formData.certBarcode}
                   alt="Certificate Barcode"
-                  className="w-[105px] h-full object-cover"
+                  className="w-full max-w-[105px] h-auto object-contain"
+                  // className="w-[105px] h-full object-cover"
                 />
                 <p
                   className={`text-start text-[12px] font-medium ${
                     bgColor === "white" ? "text-[#343533]" : "text-white"
                   } pl-[2px] w-full`}
                 >
-                  Certificate <br/>ID: FL24BO
-                  <span className={ `${bgColor === 'white'? 'text-black':'text-white' }`} >{formData.identifier} </span>
+                  Certificate <br />
+                  ID: FL24BO
+                  <span
+                    className={`${
+                      bgColor === "white" ? "text-black" : "text-white"
+                    }`}
+                  >
+                    {formData.identifier}{" "}
+                  </span>
                 </p>
               </div>
             )}
@@ -250,7 +260,8 @@ export default function PreviewUiForDownload() {
                 <img
                   src={formData.mgrSignature}
                   alt="Manager Signature"
-                  className="w-[105px] h-full object-cover border-b-4 border-[#64696A] p-1"
+                  // className="w-[105px] h-full object-cover border-b-4 border-[#64696A] p-1"
+                  className="w-full max-w-[105px] h-auto object-contain border-b-4 border-[#64696A] p-1"
                 />
                 <h1
                   className={`font-medium text-[14px] ${
@@ -302,7 +313,6 @@ export default function PreviewUiForDownload() {
           )}
         </button>
       </div>
-    
     </div>
   );
 }

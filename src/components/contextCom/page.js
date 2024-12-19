@@ -1,6 +1,5 @@
 "use client";
 
-import { ref, uploadString, getDownloadURL } from "firebase/storage";
 import { createContext, useState, useRef } from "react";
 import { storage } from "@/app/firebaseCom/page";
 import html2canvas from "html2canvas";
@@ -32,7 +31,6 @@ export default function ContextData({ children }) {
 
   const [isLogoUploaded, setIsLogoUploaded] = useState(false);
   const [loading, setLoading] = useState(false);
-
   const logoInputRef = useRef(null);
   const ceoSignatureInputRef = useRef(null);
   const certBarcodeInputRef = useRef(null);
@@ -80,7 +78,7 @@ export default function ContextData({ children }) {
     const { name, value } = e.target;
     setFormData((prevData) => ({ ...prevData, [name]: value }));
   };
-  
+
   const handleDownload = async () => {
     const input = currentRef.current;
 
@@ -153,6 +151,7 @@ export default function ContextData({ children }) {
   };
 
   const handlePreview = async () => {
+    // Destructure formData
     const {
       institutionName,
       certificationStatement,
@@ -162,45 +161,52 @@ export default function ContextData({ children }) {
       identifier,
     } = formData;
 
+    // Validate fields
     if (
-      institutionName &&
-      certificationStatement &&
-      studentName &&
-      programStatement &&
-      dateOfIssue &&
-      identifier
+      !institutionName ||
+      !certificationStatement ||
+      !studentName ||
+      !programStatement ||
+      !dateOfIssue ||
+      !identifier
     ) {
-      setLoading(true);
-      try {
-        const docRef = doc(db, "certificates", identifier.toString());
-        const docSnap = await getDoc(docRef);
-
-        if (docSnap.exists()) {
-          const existingData = docSnap.data().entries || [];
-          console.log("Existing data:", existingData);
-          toast.info("Identifier found! Displaying existing data.", {
-            theme: "light",
-          });
-          route.push("preview");
-        } else {
-          await setDoc(docRef, { entries: [formData] });
-          toast.success("Data saved and ready for preview!", {
-            theme: "light",
-          });
-
-          route.push("preview");
-        }
-      } catch (error) {
-        toast.error("Error accessing database", {
-          theme: "light",
-        });
-      } finally {
-        setLoading(false);
-      }
-    } else {
-      toast.error("Please fill in all required fields before previewing", {
+      toast.error("Please fill in all required fields before previewing.", {
         theme: "light",
       });
+      return;
+    }
+
+    if (identifier <= 0) {
+      toast.error("Identifier must be greater than 0.", { theme: "light" });
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const docRef = doc(db, "certificates", identifier.toString());
+      const docSnap = await getDoc(docRef);
+
+      if (docSnap.exists()) {
+        toast.error(
+          "Identifier already exists. Please use a unique identifier.",
+          { theme: "dark" }
+        );
+        return; // Stop further execution
+      }
+
+      // If identifier doesn't exist, save the data
+      await setDoc(docRef, { entries: [formData] });
+      toast.success("Data saved and ready for preview!", {
+        theme: "light",
+      });
+      route.push("/preview");
+    } catch (error) {
+      console.error("Error accessing database:", error);
+      toast.error("Error accessing database. Please try again later.", {
+        theme: "light",
+      });
+    } finally {
+      setLoading(false);
     }
   };
 
